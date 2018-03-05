@@ -3,10 +3,11 @@ pragma solidity ^0.4.18;
 contract CarService {
     struct Service {
         address owner;
+        string name;
     }
     
-    mapping(uint256 => Service) services;
-    address[] servicesArr;
+    mapping(address => Service) public services;
+    address[] public servicesArr;
     
     
     address private owner;
@@ -25,12 +26,16 @@ contract CarService {
         owner = msg.sender;
     }
     
-    function addService() onlyOwner valueMustBe1Ether public payable {
+    function addService(string name) onlyOwner valueMustBe1Ether public payable {
         servicesArr.push(msg.sender);
-        services[1] = Service(msg.sender);
+        services[msg.sender] = Service(msg.sender,name);
     }
     
-    function getServicesLength() constant returns(uint256){
+    function getServices() public view returns(address[]) {
+        return servicesArr;
+    }
+    
+    function getServicesLength() public constant returns(uint256){
         return servicesArr.length;
     }
 }
