@@ -1,0 +1,14 @@
+	<script type="text/javascript">
+		
+		let contractAddress = '0x28c5d2cfa220549599f742e35afb57fbd8296219';
+		let contractAbi = [{"constant": true,"inputs": [],"name": "getServicesLength","outputs": [{"name": "","type": "uint256"}],"payable": false,"stateMutability": "view",		"type": "function"},{"constant": false,"inputs": [],"name": "addService","outputs": [],
+				"payable": true,"stateMutability": "payable","type": "function"
+			},{"inputs": [],"payable": false,"stateMutability": "nonpayable","type": "constructor"
+			}];
+		if (typeof web3 === 'undefined')
+                console.log("Please install MetaMask to access the Ethereum Web3 API from your Web browser.");
+            let contract = new web3.eth.contract(contractAbi).at(contractAddress)
+            console.log(contract);
+	</script>
+</body>
+</html>

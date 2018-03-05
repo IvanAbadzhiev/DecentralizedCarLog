@@ -1,0 +1,19 @@
+ <% include header %>
+		<div class="jumbotron">
+		  <h1 class="display-4">Add a service</h1>
+		  <p class="lead">If you are owner of service you can participate in out system when you deposit 1 ether</p>
+		  <hr class="my-4">
+		  <form method="post" action="/services" enctype="application/x-www-form-urlencoded">
+		  <p>
+		  	<div class="form-group">
+			    <label for="name">Service name : </label>
+			    <input type="text" class="form-control" id="name" name="name" placeholder="Your Service ltd">
+		  	</div>
+		  </p>
+		  <p class="lead">
+		    <input type="submit" class="btn btn-primary btn-lg" value="Submit service!">
+		  </p>
+		  </form>
+		</div>
+	</div>
+ <% include footer %>
