@@ -1,32 +1,41 @@
 pragma solidity ^0.4.18;
 
 contract CarService {
+    
     struct Service {
         address owner;
         string name;
     }
     
+    event Status(uint indexed statusCode);
+    
     mapping(address => Service) public services;
     address[] public servicesArr;
     
-    
     address private owner;
+    uint256 serviceTax = 100;
     
     modifier onlyOwner(){
+        Status(1); // only owner log
         require(owner == msg.sender);
         _;
     }
-    
-    modifier valueMustBe1Ether(){
-        require (msg.value >= 1000000000000000000);
+
+    modifier valueMustBeOverTax(){
+        Status(2); // value must be over tax
+        require (msg.value >= serviceTax);
         _;
+    }
+    
+    modifier onlyOneCarServicePerAddress(address _address){
+        _; // TODO:
     }
     
     function CarService() public {
         owner = msg.sender;
     }
     
-    function addService(string name) onlyOwner valueMustBe1Ether public payable {
+    function addService(string name) onlyOwner valueMustBeOverTax public payable {
         servicesArr.push(msg.sender);
         services[msg.sender] = Service(msg.sender,name);
     }
