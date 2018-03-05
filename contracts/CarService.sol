@@ -31,6 +31,11 @@ contract CarService {
         _; // TODO:
     }
     
+    modifier onlyServiceOwner(address _address){
+        require(_address == services[_address].owner);
+        _;
+    }
+    
     function CarService() public {
         owner = msg.sender;
     }
@@ -46,5 +51,9 @@ contract CarService {
     
     function getServicesLength() public constant returns(uint256){
         return servicesArr.length;
+    }
+    
+    function removeService() public onlyServiceOwner(msg.sender) {
+        delete services[msg.sender];
     }
 }
