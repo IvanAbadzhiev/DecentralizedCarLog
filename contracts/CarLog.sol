@@ -2,9 +2,6 @@ pragma solidity ^0.4.18;
 
 contract CarLog {
     struct Car {
-        string make;
-        string model;
-        uint256 year;
         string vin;
         address owner;
     }
@@ -19,13 +16,13 @@ contract CarLog {
     
     function CarLog() public{
         contractOwner = msg.sender;
-        
-        //add temporary data
-        cars[msg.sender][getCountOwnerCars() + 1] = Car("VW","Passat",1999,"vin",msg.sender);
+        cars[msg.sender].push(Car("vin",msg.sender));
+        numCars++;
+        //cars[msg.sender] = Car("vin",msg.sender);
     }
     
-    function addCar(string _make, string _model, uint256 _year, string _vin) public {
-        cars[msg.sender][getCountOwnerCars(msg.sender) + 1] = Car(_make, _model, _year, _vin, msg.sender);
+    function addCar(string _vin) public {
+        cars[msg.sender][getCountOwnerCars(msg.sender) + 1] = Car(_vin, msg.sender);
         numCars++;
     }
     
@@ -43,7 +40,7 @@ contract CarLog {
         return numCars;
     }
     
-    function getCountOwnerCars(address _owner) internal returns(uint256){
+    function getCountOwnerCars(address _owner) public view returns(uint256){
         return cars[_owner].length;
     }
     
