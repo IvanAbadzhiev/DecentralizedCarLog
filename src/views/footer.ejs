@@ -1,14 +1,173 @@
 	<script type="text/javascript">
-		
-		let contractAddress = '0x28c5d2cfa220549599f742e35afb57fbd8296219';
-		let contractAbi = [{"constant": true,"inputs": [],"name": "getServicesLength","outputs": [{"name": "","type": "uint256"}],"payable": false,"stateMutability": "view",		"type": "function"},{"constant": false,"inputs": [],"name": "addService","outputs": [],
-				"payable": true,"stateMutability": "payable","type": "function"
-			},{"inputs": [],"payable": false,"stateMutability": "nonpayable","type": "constructor"
-			}];
-		if (typeof web3 === 'undefined')
-                console.log("Please install MetaMask to access the Ethereum Web3 API from your Web browser.");
-            let contract = new web3.eth.contract(contractAbi).at(contractAddress)
-            console.log(contract);
+		//if (typeof web3 !== 'undefined') {
+        //    web3 = new Web3(web3.currentProvider);
+        //} else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        //}
+
+
+		let contractAddress = '0x1796be52ea3230a3c6b4519c84df56d1b22c64ba';
+		let contractAbi = [
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "servicesArr",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "services",
+		"outputs": [
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getServices",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "addService",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getServicesLength",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+];
+	web3.eth.defaultAccount = web3.eth.accounts[0]
+
+    let contract = web3.eth.contract(contractAbi).at(contractAddress)
+   	
+   	function getServicesCount(){
+    	let services = contract.getServicesLength(function(err, result){
+    		console.log(result.toNumber());
+    		return result.toNumber();
+    	});
+    }
+
+    function getServices(){
+    	contract.getServices(function(err,result){
+    		
+    		$("#serviceRow").text(''); //remove previous result
+
+    		for(let i = 0; i < result.length; i++){
+    			contract.services(result[i], function(err,result){
+    				let address = result[0];
+    				let name = result[1];
+    				console.log(result);
+    				let html = '<div class="col-sm-6 col-md-4 col-lg-3">';
+    				html += '<div class="panel panel-default">';
+    				html += '<div class="panel-heading">';
+    				html += '<h3 class="panel-title">' + name + '</h3>';
+    				html += '</div>'
+
+    				html += '<div class="panel-body">';
+    				html += '<img class="img-rounded img-center" style="width: 100%;" src="http://alamedaautocarectr.com/images/services.png">';
+    				html += '<br/><br/>';
+    				html += '<strong>Address</strong>: <span class="address">' + address + '</span><br/>';
+    				html += '<button class="btn btn-default" type="button" data-id="' + address + '">Add to your car services</button>';
+    				html += '</div>';
+    				html += '</div>';
+    				html += '</div>';
+
+    				console.log(html);
+    				$('#serviceRow').append(html);
+    			});
+    		}
+    	});
+    }
+
+    function addService(name) {
+    	console.log(name);
+    	contract.addService(name, { from : web3.eth.accounts[0], value :10000000000000000 },
+    			function(err, data){
+    		//if(!err){ location.reload(); }
+    	});
+    }
+    $("#addService").on("click", function(){
+    	$(".error").text('');
+    	let service_name = $("#name").val();
+
+    	if(!service_name){
+    		$(".error").text('Please write valid service name');
+    		return;
+    	} 
+
+    	if(service_name.length < 3){
+    		return;
+    		$(".error").text('Service name must be over 3 characters');
+    	}
+
+    	addService(service_name);
+    });
+    getServices();
+
 	</script>
 </body>
 </html>

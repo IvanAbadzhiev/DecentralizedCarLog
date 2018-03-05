@@ -22,7 +22,12 @@ app.get('/services', (req, res) => {
 app.post('/services', urlencodedParser, (req,res) => {
 	let serviceAddress = req.body.name;
 });
-console.log(path.join(__dirname, 'node_modules'));
-app.use('/scripts', express.static(path.join(__dirname, 'node_modules')));
+
+app.get('/cars', (req,res) => {
+	res.render('cars.html');
+})
+
+app.use('/scripts', express.static(path.join(__dirname, 'node_modules/')));
+app.use('/css', express.static(path.join(__dirname, 'css/')));
 
 app.listen(3000, () => console.log('App listen on port 3000'));
