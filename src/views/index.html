@@ -7,7 +7,7 @@
 		  	<div class="form-group">
 			    <label for="vehicleVin">Vin Code : </label>
 			    <input type="text" class="form-control" id="vehicleVin" placeholder="Vin code">
-			    <small id="emailHelp" class="form-text text-muted">Example vin code : 1HGCG1653YA038847</small>
+			    <small id="emailHelp" class="form-text text-muted oncopy">Example vin code : 1HGCG1653YA038847</small>
 		  	</div>
 		  </p>
 		  <p class="lead">
@@ -15,4 +15,11 @@
 		  </p>
 		</div>
 	</div>
+	<script>
+		$(".oncopy").bind({
+			copy : function(e){
+				$("#vehicleVin").val('1HGCG1653YA038847');	
+			}
+		});
+	</script>
  <% include footer %>

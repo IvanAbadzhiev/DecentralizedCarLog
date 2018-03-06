@@ -12,11 +12,15 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 app.get('/', (req, res) => {
-	res.render('index.html');
+	res.render('index.html', {
+		page : 'index'
+	});
 });
 
 app.get('/services', (req, res) => {
-	res.render('services.html');
+	res.render('services.html',{
+		page : 'services'
+	});
 });
 
 app.post('/services', urlencodedParser, (req,res) => {
@@ -24,7 +28,9 @@ app.post('/services', urlencodedParser, (req,res) => {
 });
 
 app.get('/cars', (req,res) => {
-	res.render('cars.html');
+	res.render('cars.html',{
+		page : 'cars'
+	});
 })
 
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules/')));

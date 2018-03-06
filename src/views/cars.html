@@ -8,11 +8,12 @@
 		  	<div class="form-group">
 			    <label for="name">Car vin : </label>
 			    <input type="text" class="form-control" id="name" name="name" placeholder="Your Service ltd">
+			    <span class="success"></span>
 			    <span class="error"></span>
 		  	</div>
 		  </p>
 		  <p class="lead">
-		    <input type="button" class="btn btn-primary btn-lg" id="addService" value="Add a car!">
+		    <input type="button" class="btn btn-primary btn-lg" id="addAcar" value="Add a car!">
 		  </p>
 		</div>
 		
@@ -21,4 +22,151 @@
 			<!-- here will be added all available services -->
 		</div>
 	</div>
+	<script>
+	let carContractAddress = '0xc735ec7ad19673b23198e1d6101fa63ba2a5f88b';
+		let carContractAbi = [
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "source",
+				"type": "string"
+			}
+		],
+		"name": "stringToBytes32",
+		"outputs": [
+			{
+				"name": "result",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getCarsByOwner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			}
+		],
+		"name": "getCar",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			}
+		],
+		"name": "addCar",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+];
+
+	web3.eth.defaultAccount = web3.eth.accounts[0];
+
+	let carContract = web3.eth.contract(carContractAbi).at(carContractAddress)
+
+	function addACar(name){
+		$('.success').val('');
+		carContract.addCar(name, function(err, result){
+			if(!err) { 
+				$('.success').append("Success: Your car will be in the blockchain soon, you can check your transaction <a target=\"blank\" href='https://ropsten.etherscan.io/tx/" + result + "'>here</a>");
+			} else {
+				console.log(err);
+			}
+		});
+	}
+
+	function getCars(){
+		carContract.getCarsByOwner(function(err, data){ 
+			if(!err) {
+				let cars = data;
+				console.log(cars);
+				for (var i = 0; i < cars.length; i++) {
+					let vin = cars[i];
+
+					carContract.getCar(vin, function(err, result){
+						let html = '<div class="col-sm-6 col-md-4 col-lg-3">';
+	    				html += '<div class="panel panel-default">';
+	    				html += '<div class="panel-heading">';
+	    				html += '<h3 class="panel-title">' + web3.toAscii(vin) + '</h3>';
+	    				html += '</div>'
+
+	    				html += '<div class="panel-body">';
+	    				html += '<img class="img-rounded img-center" style="width: 100%;" src="http://www.volvo.com/content/dam/volvo/volvo-gateway/simple-items/Cars-XC90-780x444.jpg/_jcr_content/renditions/xCars-XC90-780x444-itemdisplay.jpg.pagespeed.ic._lY3C88DwF.jpg">';
+	    				html += '<br/><br/>';
+	    				html += '<strong>Address</strong>: <span class="address">' + '' + '</span><br/>';
+	    				html += '<button class="btn btn-default" type="button" data-id="' + '' + '">Add to your car services</button>';
+	    				html += '</div>';
+	    				html += '</div>';
+	    				html += '</div>';
+
+	    				$('#carRow').append(html);
+					});
+				}
+			} else {
+				console.log(err);
+			}
+		});
+	}
+
+	$("#addAcar").on("click", function(){
+		$(".error").text('');
+
+		let carName = $("#name").val();
+
+		if(!carName){
+    		$(".error").text('Please write valid car vin');
+    		return;
+    	} 
+
+    	if(carName.length !== 17){
+    		$(".error").text('Service name must be 17 characters');
+    		return;
+    	}
+
+    	addACar(carName);
+
+	});
+	$(document).ready(function() {
+		getCars();
+	});
+	</script>
  <% include footer %>
