@@ -1,50 +1,55 @@
 pragma solidity ^0.4.18;
 
-contract CarLog {
+contract CarLog  {
+    
     struct Car {
         string vin;
         address owner;
     }
     
-    //Car[] cars[];
-    mapping (address => Car[]) cars;
-    uint256 numCars; //car counters
+    struct Owner {
+        address owner;
+        Car[] cars;
+    }
     
-    mapping (address => uint256) private carOwners;
+    mapping(address => mapping (string => Car)) cars;
+    mapping(string => address) vinToAddress;
+    mapping(address => Car[]) carToOwners;
     
     address private contractOwner;
     
     function CarLog() public{
         contractOwner = msg.sender;
-        cars[msg.sender].push(Car("vin",msg.sender));
-        numCars++;
-        //cars[msg.sender] = Car("vin",msg.sender);
     }
     
-    function addCar(string _vin) public {
-        cars[msg.sender][getCountOwnerCars(msg.sender) + 1] = Car(_vin, msg.sender);
-        numCars++;
+    function addCar(string _vin){
+        cars[msg.sender][_vin] =  Car(_vin, msg.sender);
+        vinToAddress[_vin] = msg.sender;
+        carToOwners[msg.sender].push(Car(_vin, msg.sender));
     }
     
-    function getCar(string _vin) public view returns(string) {
-        Car[] carsPerOwner;
-        for(uint16 i = 0; i < cars[msg.sender].length; i++){
-            return cars[msg.sender][i].vin;
-            //if(cars[msg.sender][i].vin == _vin){
-             //   carsPerOwner.push(Car(cars[msg.sender].make,cars[msg.sender].model,cars[msg.sender].year));
-            //}    
+    function getCar(string _vin) public view returns(string){
+        return cars[vinToAddress[_vin]][_vin].vin;
+    }
+    
+    function getCarsByOwner() public view returns( bytes32[] ) {
+        bytes32[] vins;
+        
+        for(uint i = 0; i < carToOwners[msg.sender].length; i++){
+            vins.push(stringToBytes32(carToOwners[msg.sender][i].vin));
         }
-    }
+        
+        return vins;
+   }
     
-    function getCarsCount() public view returns(uint256){
-        return numCars;
-    }
+    function stringToBytes32(string memory source) public view returns (bytes32 result) {
+        bytes memory tempEmptyStringTest = bytes(source);
+        if (tempEmptyStringTest.length == 0) {
+            return 0x0;
+        }
     
-    function getCountOwnerCars(address _owner) public view returns(uint256){
-        return cars[_owner].length;
-    }
-    
-    function changeOwner(address newOwner, string _vin){
-        //check owner
+        assembly {
+            result := mload(add(source, 32))
+        }
     }
 }
