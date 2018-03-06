@@ -40,7 +40,7 @@ contract CarLog  {
         }
         
         return vins;
-   }
+    }
     
     function stringToBytes32(string memory source) public view returns (bytes32 result) {
         bytes memory tempEmptyStringTest = bytes(source);
