@@ -23,7 +23,8 @@
 		</div>
 	</div>
 	<script>
-	let carContractAddress = '0xc735ec7ad19673b23198e1d6101fa63ba2a5f88b';
+
+	let carContractAddress = '0x0462d2daf0d40d5828cedfc16972d8670c516e9d';
 		let carContractAbi = [
 	{
 		"constant": true,
@@ -47,7 +48,7 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "getCarsByOwner",
+		"name": "getMyCars",
 		"outputs": [
 			{
 				"name": "",
@@ -85,7 +86,7 @@
 				"type": "string"
 			}
 		],
-		"name": "addCar",
+		"name": "addAcar",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -105,7 +106,8 @@
 
 	function addACar(name){
 		$('.success').val('');
-		carContract.addCar(name, function(err, result){
+
+		carContract.addAcar(name, function(err, result) {
 			if(!err) { 
 				$('.success').append("Success: Your car will be in the blockchain soon, you can check your transaction <a target=\"blank\" href='https://ropsten.etherscan.io/tx/" + result + "'>here</a>");
 			} else {
@@ -115,7 +117,7 @@
 	}
 
 	function getCars(){
-		carContract.getCarsByOwner(function(err, data){ 
+		carContract.getMyCars({ gas : 8000000 }, function(err, data){ 
 			if(!err) {
 				let cars = data;
 				console.log(cars);

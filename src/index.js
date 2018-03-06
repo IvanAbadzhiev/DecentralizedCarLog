@@ -31,7 +31,15 @@ app.get('/cars', (req,res) => {
 	res.render('cars.html',{
 		page : 'cars'
 	});
-})
+});
+
+app.get('/vin/:vin', function(req, res){
+	let vin = req.params.vin;
+	
+	res.render('vinReport.html',{
+		vin : vin
+	});
+});
 
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules/')));
 app.use('/css', express.static(path.join(__dirname, 'css/')));

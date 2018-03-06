@@ -8,10 +8,11 @@
 			    <label for="vehicleVin">Vin Code : </label>
 			    <input type="text" class="form-control" id="vehicleVin" placeholder="Vin code">
 			    <small id="emailHelp" class="form-text text-muted oncopy">Example vin code : 1HGCG1653YA038847</small>
+			    <span class="error"></span>
 		  	</div>
 		  </p>
 		  <p class="lead">
-		    <a class="btn btn-primary btn-lg" href="#" role="button">Check car!</a>
+		    <a class="btn btn-primary btn-lg" id="checkVin" role="button">Check car!</a>
 		  </p>
 		</div>
 	</div>
@@ -21,5 +22,21 @@
 				$("#vehicleVin").val('1HGCG1653YA038847');	
 			}
 		});
+
+		$("#checkVin").on("click", function(){
+			let vin = $("#vehicleVin").val();
+
+			if(!vin){
+	    		$(".error").text('Please write valid car vin');
+		    	return;
+		    } 
+
+	    	if(vin.length !== 17){
+	    		$(".error").text('Service name must be 17 characters');
+	    		return;
+	    	}
+
+	    	location = '/vin/' + vin;
+		})
 	</script>
  <% include footer %>
