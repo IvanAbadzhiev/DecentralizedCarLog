@@ -24,27 +24,8 @@
 	</div>
 	<script>
 
-	let carContractAddress = '0x0462d2daf0d40d5828cedfc16972d8670c516e9d';
+	let carContractAddress = '0xbb5f2f1bbbb7b477525d87f762b50eb014b3c63c';
 		let carContractAbi = [
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "source",
-				"type": "string"
-			}
-		],
-		"name": "stringToBytes32",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bytes32"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
 	{
 		"constant": true,
 		"inputs": [],
@@ -79,6 +60,24 @@
 		"type": "function"
 	},
 	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			},
+			{
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "addVehicleService",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
@@ -90,6 +89,25 @@
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "source",
+				"type": "string"
+			}
+		],
+		"name": "stringToBytes32",
+		"outputs": [
+			{
+				"name": "result",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -134,8 +152,9 @@
 	    				html += '<div class="panel-body">';
 	    				html += '<img class="img-rounded img-center" style="width: 100%;" src="http://www.volvo.com/content/dam/volvo/volvo-gateway/simple-items/Cars-XC90-780x444.jpg/_jcr_content/renditions/xCars-XC90-780x444-itemdisplay.jpg.pagespeed.ic._lY3C88DwF.jpg">';
 	    				html += '<br/><br/>';
-	    				html += '<strong>Address</strong>: <span class="address">' + '' + '</span><br/>';
-	    				html += '<button class="btn btn-default" type="button" data-id="' + '' + '">Add to your car services</button>';
+	    				html += '<strong>Change Ownership</strong>: <br/>';
+	    				html += '<strong>Address</strong>: <input type="text" class="form-control"><br/>';
+	    				html += '<button class="btn btn-default" type="button" data-id="' + '' + '">Change</button>';
 	    				html += '</div>';
 	    				html += '</div>';
 	    				html += '</div>';

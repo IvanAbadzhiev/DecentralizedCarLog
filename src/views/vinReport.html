@@ -1,13 +1,58 @@
 <% include header %>
-<div class="jumbotron">
+<div class="">
 	<h1 class="display-4">Report for <%= vin %></h1>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+			  <div class="panel-heading">Basic vehicle data</div>
+			  <div class="panel-body">
+			  	<ul>
+			  		<li><b>Make : </b> Maserati</li>
+			  		<li><b>Mode : </b> Gran cabrio</li>
+			  	</ul>
+			  </div>
+			</div>
+		</div>
 
-	<ul>
-		<li><b>Make : </b> Maserati</li>
-		<li><b>Model : </b> Maserati</li>
-		<li><b>Make : </b> Maserati</li>
-		<li><b>Make : </b> Maserati</li>
-		<li><b>Make : </b> Maserati</li>
-	</ul>
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+			  <div class="panel-heading">Engine </div>
+			  <div class="panel-body">
+			  	<ul>
+			  		<li><b>Fuel type : </b> Petrol</li>
+			  		<li><b>Engine capacity [ccm] : </b> 3000</li>
+			  		<li><b>Engine : </b> Engine 3.0L V6 SOHC 24V</li>
+			  		<li><b>Fuel consumption : </b> 9.15</li>
+			  	</ul>
+			  </div>
+			</div>
+		</div>
+
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+			  <div class="panel-heading">Search in databases </div>
+			  <div class="panel-body">
+			  	<ul>
+			  		<li><b>Is this vehicle has been stolen : </b> No</li>
+			  		<li><b>Fines : </b> No fines for that car.</li>
+			  	</ul>
+			  </div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel panel-default">
+				<div class="panel-heading"> Car repairs </div>
+				<div class="panel-body">
+			  	<ul>
+			  		<li><b>03.07.2018 : </b> Change oil</li>
+			  		<li><b>09.07.2018 : </b> Tax paid.</li>
+			  	</ul>
+			  </div>
+			</div>
+		</div>
+	</div>
 </div>
 <% include footer %>
