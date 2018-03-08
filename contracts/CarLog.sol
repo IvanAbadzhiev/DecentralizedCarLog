@@ -1,65 +1,60 @@
 pragma solidity ^0.4.18;
 
-contract CarLog {
+contract CarLog  {
+    
     struct Car {
         string vin;
-        address owner;
+        bool isExist;
     }
     
-    mapping(address => Car[]) private cars;
-    mapping(string => Car) private carVins;
-    mapping(string => address[]) private carToService;
-    
-    address private contractOwner;
-  
-    modifier onlyCarOwner(string _vin){
-        require(carVins[_vin].owner == msg.sender);
-        _;
+    struct Repair {
+     address service;
+     string repair;
+     uint256 timestamp;
     }
     
-    function CarLog() public{
-        contractOwner = msg.sender;
-    }
+    address contractOwner;
     
-   function addAcar(string _vin) public {
-       cars[msg.sender].push(Car(_vin, msg.sender));
-       carVins[_vin] = Car(_vin, msg.sender);
+   mapping (address => Car[]) cars;
+   mapping (string => Car) carToVins;
+   mapping (string => Repair[]) carToRepairs;
+   
+   function CarLog() public{
+       contractOwner = msg.sender;
    }
    
-   function getCar(string _vin) public view returns(string){
-       return carVins[_vin].vin;
+   function addCar(string _vin) public {
+       cars[msg.sender].push(Car(_vin,true));
+       carToVins[_vin] = Car(_vin,true);
    }
    
-   function addVehicleService(string _vin, address _address) public onlyCarOwner(_vin) {
-       carToService[_vin].push(_address);
+   function getMyCarsCount() public view returns(uint) {
+       return cars[msg.sender].length;
    }
    
-   // TODO validation.
-   // check is service already added
-   // check address is not car owner
-   function getVehicleServices(string _vin) public view onlyCarOwner(_vin) returns(address[]) {
-       return carToService[_vin];
+   function getMyCar(uint index) public view returns(string){
+       return cars[msg.sender][index].vin;
    }
    
-   function getMyCars() public view returns(bytes32[]) {
-       bytes32[] storage vins;
+   function getCarByVin(string _vin) public view returns(bool){
+       return carToVins[_vin].isExist;
+   }
+   
+   function addRepair(string _vin, string _repair) public {
+       Repair memory newRepair;
+       newRepair.service = msg.sender;
+       newRepair.repair = _repair;
+       newRepair.timestamp = block.timestamp;
        
-        for(uint i = 0; i < cars[msg.sender].length; i++){
-            vins.push(stringToBytes32(cars[msg.sender][i].vin));
-        }
-        
-        return vins;
+       carToRepairs[_vin].push(newRepair);
    }
    
- 
-    function stringToBytes32(string memory source) public view returns (bytes32 result) {
-        bytes memory tempEmptyStringTest = bytes(source);
-        if (tempEmptyStringTest.length == 0) {
-            return 0x0;
-        }
-    
-        assembly {
-            result := mload(add(source, 32))
-        }
-    }
+   function getRepairsCount(string _vin) public view returns(uint256){
+       return carToRepairs[_vin].length;
+   }
+   
+   function getRepair(string _vin,uint256 index) public view returns(address,string,uint256){
+       Repair memory repair = carToRepairs[_vin][index];
+       return (repair.service, repair.repair, repair.timestamp);
+   }
 }
