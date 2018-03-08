@@ -4,6 +4,7 @@ contract CarLog  {
     
     struct Car {
         string vin;
+        string image;
         bool isExist;
     }
     
@@ -23,21 +24,22 @@ contract CarLog  {
        contractOwner = msg.sender;
    }
    
-   function addCar(string _vin) public {
-       cars[msg.sender].push(Car(_vin,true));
-       carToVins[_vin] = Car(_vin,true);
+   function addCar(string _vin, string image) public {
+       cars[msg.sender].push(Car(_vin, image,true));
+       carToVins[_vin] = Car(_vin, image, true);
    }
    
    function getMyCarsCount() public view returns(uint) {
        return cars[msg.sender].length;
    }
    
-   function getMyCar(uint index) public view returns(string){
-       return cars[msg.sender][index].vin;
+   function getMyCar(uint index) public view returns(string,string){
+       Car memory myCar = cars[msg.sender][index];
+       return (myCar.vin, myCar.image);
    }
    
-   function getCarByVin(string _vin) public view returns(bool){
-       return carToVins[_vin].isExist;
+   function getCarByVin(string _vin) public view returns(string){
+       return carToVins[_vin].image;
    }
    
    function addRepair(string _vin, string _repair) public {
