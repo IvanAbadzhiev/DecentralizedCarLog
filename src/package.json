@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "buffer": "^5.1.0",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "iojs": "^1.0.0",
+    "ipfs-api": "^18.1.1",
     "require-stub": "^2.2.4",
     "web3": "^0.19.1"
   }

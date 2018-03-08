@@ -42,6 +42,7 @@ app.get('/vin/:vin', function(req, res){
 });
 
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules/')));
+app.use('/js', express.static(path.join(__dirname, 'js/')));
 app.use('/css', express.static(path.join(__dirname, 'css/')));
 
 app.listen(3000, () => console.log('App listen on port 3000'));

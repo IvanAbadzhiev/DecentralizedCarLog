@@ -3,7 +3,7 @@
 		  <h1 class="display-4">Add a car</h1>
 		  <p class="lead">You can add your car on blockchain</p>
 		  <hr class="my-4">
-		  
+		  <form>
 		  <p>
 		  	<div class="form-group">
 			    <label for="name">Car vin : </label>
@@ -11,10 +11,18 @@
 			    <span class="success"></span>
 			    <span class="error"></span>
 		  	</div>
+
+		  	<div class="form-group">
+			    <label for="name">Car Image : </label>
+			    <input type="file" class="form-control" id="carImage">
+			    <input type="hidden" id="ipfsImage">
+			    <span class="error"></span>
+		  	</div>
 		  </p>
 		  <p class="lead">
-		    <input type="button" class="btn btn-primary btn-lg" id="addAcar" value="Add a car!">
+		    <input type="button" class="btn btn-primary btn-lg" id="addAcar" value="Add a vehicle!">
 		  </p>
+		  </form>
 		</div>
 		
 
@@ -23,159 +31,17 @@
 		</div>
 	</div>
 	<script>
-
-	let carContractAddress = '0xa32c2fb0dd93d8b809c311c7fad2405b0ccb50e5';
-		let carContractAbi = [
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_vin",
-				"type": "string"
-			}
-		],
-		"name": "getRepairsCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_vin",
-				"type": "string"
-			},
-			{
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "getRepair",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getMyCarsCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "getMyCar",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_vin",
-				"type": "string"
-			}
-		],
-		"name": "getCarByVin",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_vin",
-				"type": "string"
-			}
-		],
-		"name": "addCar",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_vin",
-				"type": "string"
-			},
-			{
-				"name": "_repair",
-				"type": "string"
-			}
-		],
-		"name": "addRepair",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	}
-	];
+	let carContractAddress = '0x86758e8488c649ae7b9245272eabd4b81ff373e6';
+	let carContractAbi = [{"constant":!0,"inputs":[{"name":"_vin","type":"string"}],"name":"getRepairsCount","outputs":[{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"_vin","type":"string"},{"name":"index","type":"uint256"}],"name":"getRepair","outputs":[{"name":"","type":"address"},{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[],"name":"getMyCarsCount","outputs":[{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"index","type":"uint256"}],"name":"getMyCar","outputs":[{"name":"","type":"string"},{"name":"","type":"string"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"_vin","type":"string"}],"name":"getCarByVin","outputs":[{"name":"","type":"string"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!1,"inputs":[{"name":"_vin","type":"string"},{"name":"image","type":"string"}],"name":"addCar","outputs":[],"payable":!1,"stateMutability":"nonpayable","type":"function"},{"constant":!1,"inputs":[{"name":"_vin","type":"string"},{"name":"_repair","type":"string"}],"name":"addRepair","outputs":[],"payable":!1,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":!1,"stateMutability":"nonpayable","type":"constructor"}];
 
 	web3.eth.defaultAccount = web3.eth.accounts[0];
 
 	let carContract = web3.eth.contract(carContractAbi).at(carContractAddress)
 
-	function addACar(name){
+	function addACar(name, image){
 		$('.success').val('');
 
-		carContract.addCar(name, function(err, result) {
+		carContract.addCar(name,image, function(err, result) {
 			if(!err) { 
 				$('.success').append("Success: Your car will be in the blockchain soon, you can check your transaction <a target=\"blank\" href='https://ropsten.etherscan.io/tx/" + result + "'>here</a>");
 			} else {
@@ -185,22 +51,25 @@
 	}
 
 	function getCars(){
-		carContract.getMyCarsCount(function(err, data){ 
+		carContract.getMyCarsCount(function(err, data){
+			
 			if(!err) {
 				let carsCount = data.toNumber();
 				
 				for (var i = 0; i < carsCount; i++) {
-
+				
 					carContract.getMyCar(i, function(err, result){
-						console.log(result);
+						let vin = result[0];
+						let image = result[1];
+
 						let html = '<div class="col-sm-6 col-md-4 col-lg-3">';
 	    				html += '<div class="panel panel-default">';
 	    				html += '<div class="panel-heading">';
-	    				html += '<h3 class="panel-title">' + result + '</h3>';
+	    				html += '<h3 class="panel-title">' + vin + '</h3>';
 	    				html += '</div>'
 
 	    				html += '<div class="panel-body">';
-	    				html += '<img class="img-rounded img-center" style="width: 100%;" src="http://www.volvo.com/content/dam/volvo/volvo-gateway/simple-items/Cars-XC90-780x444.jpg/_jcr_content/renditions/xCars-XC90-780x444-itemdisplay.jpg.pagespeed.ic._lY3C88DwF.jpg">';
+	    				html += '<img style="width: 100%;" src="' + image + '">';
 	    				html += '<br/><br/>';
 	    				html += '<strong>Change Ownership</strong>: <br/>';
 	    				html += '<strong>Address</strong>: <input type="text" class="form-control"><br/>';
@@ -219,6 +88,34 @@
 	}
 
 	$("#addAcar").on("click", function(){
+		const reader = new FileReader();
+      	
+      	reader.onloadend = function() {
+	        const ipfs = window.IpfsApi('ipfs.infura.io', '5001', {protocol: 'https'})
+	        const buf = buffer.Buffer(reader.result) // Convert data into buffer
+	        
+	        let upload = {
+	        	"path" : "attributes.json",
+	        	"content" : buf
+	        }
+	        
+	        $(".loading").show();
+	        
+	        ipfs.files.add([upload], (err, result) => { // Upload buffer to IPFS
+	          if(err) {
+	            console.error(err)
+	            return
+	          }
+	          let url = `https://ipfs.io/ipfs/${result[0].hash}`
+
+	         $("#ipfsImage").val(url);
+	         $(".loading").hide();
+	        });
+	    }
+        
+        const carImage = document.getElementById("carImage");
+        reader.readAsArrayBuffer(carImage.files[0]); // Read Provided File
+
 		$(".error").text('');
 
 		let carName = $("#name").val();
@@ -233,9 +130,16 @@
     		return;
     	}
 
-    	addACar(carName);
+    	let image = $("#ipfsImage").val();
+
+    	if(!image){
+    		$(".errorImage").text('Please add image of your car');
+    	}
+    	
+    	addACar(carName,image);
 
 	});
+
 	$(document).ready(function() {
 		getCars();
 	});
