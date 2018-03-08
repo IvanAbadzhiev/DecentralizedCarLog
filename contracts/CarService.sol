@@ -5,29 +5,28 @@ contract CarService {
     struct Service {
         address owner;
         string name;
+        string image;
+        bool isExist;
     }
     
-    event Status(uint indexed statusCode);
-    
     mapping(address => Service) public services;
-    address[] public servicesArr;
+    address[] public servicesIndex;
     
     address private owner;
     uint256 serviceTax = 100;
     
     modifier onlyOwner(){
-        Status(1); // only owner log
         require(owner == msg.sender);
         _;
     }
 
     modifier valueMustBeOverTax(){
-        Status(2); // value must be over tax
         require (msg.value >= serviceTax);
         _;
     }
     
-    modifier onlyOneCarServicePerAddress(address _address){
+    modifier onlyOneCarServicePerAddress(){
+        require(services[msg.sender].isExist == false);
         _; // TODO:
     }
     
@@ -40,20 +39,17 @@ contract CarService {
         owner = msg.sender;
     }
     
-    function addService(string name) onlyOwner valueMustBeOverTax public payable {
-        servicesArr.push(msg.sender);
-        services[msg.sender] = Service(msg.sender,name);
+    function addService(string name, string image) onlyOwner onlyOneCarServicePerAddress valueMustBeOverTax public payable {
+        servicesIndex.push(msg.sender);
+        services[msg.sender] = Service(msg.sender,name,image,true);
     }
     
-    function getServices() public view returns(address[]) {
-        return servicesArr;
+    function getService(uint index) public view returns(string, string) {
+        Service service = services[servicesIndex[index]];
+        return (service.name, service.image);
     }
     
     function getServicesLength() public constant returns(uint256){
-        return servicesArr.length;
-    }
-    
-    function removeService() public onlyServiceOwner(msg.sender) {
-        delete services[msg.sender];
+        return servicesIndex.length;
     }
 }
