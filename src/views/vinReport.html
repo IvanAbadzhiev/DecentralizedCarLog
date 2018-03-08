@@ -46,13 +46,185 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"> Car repairs </div>
 				<div class="panel-body">
-			  	<ul>
-			  		<li><b>03.07.2018 : </b> Change oil</li>
-			  		<li><b>09.07.2018 : </b> Tax paid.</li>
-			  	</ul>
+			  		<ul class="repairsList"></ul>
 			  </div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	
+	let contractAddress = '0xa32c2fb0dd93d8b809c311c7fad2405b0ccb50e5';
+	let carContractAbi = [
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			}
+		],
+		"name": "getRepairsCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			},
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "getRepair",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getMyCarsCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "getMyCar",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			}
+		],
+		"name": "getCarByVin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			}
+		],
+		"name": "addCar",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			},
+			{
+				"name": "_repair",
+				"type": "string"
+			}
+		],
+		"name": "addRepair",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+	];
+
+	let carContract = web3.eth.contract(carContractAbi).at(contractAddress)
+	let vin = '<%=vin%>';
+	carContract.getCarByVin(vin, function(err, isExist){
+		if(!err){
+			console.log(isExist);
+		}
+	});
+
+	carContract.getRepairsCount(vin,function(err, repairsCount){
+		if(!err) {
+			$('.repairsList').text('');
+			
+			for(let i = 0; i < repairsCount.toNumber();i++){
+				carContract.getRepair(vin, i, function(err, data){
+					let serviceAddress = data[0];
+					let reason = data[1];
+					var timestamp = data[2];
+
+					let html = '<li>' + timestamp + ' - ' + reason + ' - service address ' + serviceAddress + '</li>';
+					
+					$('.repairsList').append(html);
+				});
+			}
+		} else {
+			console.log("Can't get count of repairs");
+		}
+	});
+</script>
 <% include footer %>

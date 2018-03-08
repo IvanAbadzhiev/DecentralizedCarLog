@@ -24,22 +24,8 @@
 	</div>
 	<script>
 
-	let carContractAddress = '0xbb5f2f1bbbb7b477525d87f762b50eb014b3c63c';
+	let carContractAddress = '0xa32c2fb0dd93d8b809c311c7fad2405b0ccb50e5';
 		let carContractAbi = [
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getMyCars",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bytes32[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
 	{
 		"constant": true,
 		"inputs": [
@@ -48,11 +34,11 @@
 				"type": "string"
 			}
 		],
-		"name": "getCar",
+		"name": "getRepairsCount",
 		"outputs": [
 			{
 				"name": "",
-				"type": "string"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -67,12 +53,77 @@
 				"type": "string"
 			},
 			{
-				"name": "_address",
-				"type": "address"
+				"name": "index",
+				"type": "uint256"
 			}
 		],
-		"name": "addVehicleService",
-		"outputs": [],
+		"name": "getRepair",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getMyCarsCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "getMyCar",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_vin",
+				"type": "string"
+			}
+		],
+		"name": "getCarByVin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -85,29 +136,28 @@
 				"type": "string"
 			}
 		],
-		"name": "addAcar",
+		"name": "addCar",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"constant": false,
 		"inputs": [
 			{
-				"name": "source",
+				"name": "_vin",
+				"type": "string"
+			},
+			{
+				"name": "_repair",
 				"type": "string"
 			}
 		],
-		"name": "stringToBytes32",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bytes32"
-			}
-		],
+		"name": "addRepair",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -116,7 +166,7 @@
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	}
-];
+	];
 
 	web3.eth.defaultAccount = web3.eth.accounts[0];
 
@@ -125,7 +175,7 @@
 	function addACar(name){
 		$('.success').val('');
 
-		carContract.addAcar(name, function(err, result) {
+		carContract.addCar(name, function(err, result) {
 			if(!err) { 
 				$('.success').append("Success: Your car will be in the blockchain soon, you can check your transaction <a target=\"blank\" href='https://ropsten.etherscan.io/tx/" + result + "'>here</a>");
 			} else {
@@ -135,18 +185,18 @@
 	}
 
 	function getCars(){
-		carContract.getMyCars({ gas : 8000000 }, function(err, data){ 
+		carContract.getMyCarsCount(function(err, data){ 
 			if(!err) {
-				let cars = data;
-				console.log(cars);
-				for (var i = 0; i < cars.length; i++) {
-					let vin = cars[i];
+				let carsCount = data.toNumber();
+				
+				for (var i = 0; i < carsCount; i++) {
 
-					carContract.getCar(vin, function(err, result){
+					carContract.getMyCar(i, function(err, result){
+						console.log(result);
 						let html = '<div class="col-sm-6 col-md-4 col-lg-3">';
 	    				html += '<div class="panel panel-default">';
 	    				html += '<div class="panel-heading">';
-	    				html += '<h3 class="panel-title">' + web3.toAscii(vin) + '</h3>';
+	    				html += '<h3 class="panel-title">' + result + '</h3>';
 	    				html += '</div>'
 
 	    				html += '<div class="panel-body">';
