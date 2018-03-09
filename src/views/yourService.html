@@ -1,0 +1,16 @@
+<% include header %>
+
+<script>
+	if(!window.getCookie("signedAuthMessage")){
+		web3.eth.sign(web3.eth.coinbase, web3.sha3("CarDapp"), function(err, data){
+			if(!err){
+				let signedAuthMessage = data;
+				document.cookie = "signedAuthMessage=" + signedAuthMessage;
+			} else {
+				console.log(err);
+				toastr.error('Something is broken, you can find more information in the console', 'Network error!')
+			}
+		});
+	}
+</script>
+<% include footer %>

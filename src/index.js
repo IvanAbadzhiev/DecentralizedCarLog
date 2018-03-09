@@ -41,6 +41,10 @@ app.get('/vin/:vin', function(req, res){
 	});
 });
 
+app.get('/yourService', function(req, res){
+	res.render('yourService.html');
+});
+
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules/')));
 app.use('/js', express.static(path.join(__dirname, 'js/')));
 app.use('/css', express.static(path.join(__dirname, 'css/')));
