@@ -1,16 +1,22 @@
 <% include header %>
 
-<script>
-	if(!window.getCookie("signedAuthMessage")){
-		web3.eth.sign(web3.eth.coinbase, web3.sha3("CarDapp"), function(err, data){
-			if(!err){
-				let signedAuthMessage = data;
-				document.cookie = "signedAuthMessage=" + signedAuthMessage;
-			} else {
-				console.log(err);
-				toastr.error('Something is broken, you can find more information in the console', 'Network error!')
-			}
-		});
-	}
-</script>
+<div class="jumbotron">
+	<h1 class="display-4">Add a repair</h1>
+
+	<div class="form-group">
+	    <label for="name">Vin code : </label>
+	    <input type="text" class="form-control" id="vinCode" placeholder="Vin code of a vehicle">
+	</div>
+
+	<div class="form-group">
+	    <label>Repair : </label>
+	    <input type="text" class="form-control" id="repairText" placeholder="What did you do?">
+	</div>
+
+	<div class="form-group">
+	    <button class="btn btn-primary" id="AddRepairButton">Add repair</button>
+	</div>
+</div>
+
+<script src="/js/yourService.js"></script>
 <% include footer %>

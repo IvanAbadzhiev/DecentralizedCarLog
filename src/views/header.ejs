@@ -5,69 +5,16 @@
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 	  <link rel="stylesheet" href="/css/stylesheet.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://unpkg.com/ipfs-api@9.0.0/dist/index.js"
+	  <script src="/js/config.js"></script>
+  	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://unpkg.com/ipfs-api@9.0.0/dist/index.js"
     integrity="sha384-5bXRcW9kyxxnSMbOoHzraqa7Z0PQWIao+cgeg327zit1hz5LZCEbIMx/LWKPReuB"
     crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="/scripts/require-stub/index.js"></script>
-  <script src="/js/buffer.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-  <script type="text/javascript">
-  		$(document).ready(function(){
-  			if (typeof web3 !== 'undefined') {
-            	web3 = new Web3(web3.currentProvider);
-	        } else {
-	        	toastr.warning('Please install metamask', 'Metamask!');
-	       	}
-
-	       	if(web3.version.network != 3){
-	       		toastr.warning('Please use ropsten network to test my dapp');
-	       	}
-  		});
-
-  		window.getCookie = function(name) {
-		  match = document.cookie.match(new RegExp(name + '=([^;]+)'));
-		  if (match) return match[1];
-		}
-
-		window.sleep = function(miliseconds) {
-                var currentTime = new Date().getTime();
-                while (currentTime + miliseconds >= new Date().getTime()) {
-                }
-            }
-
-		const ipfs = window.IpfsApi('ipfs.infura.io', '5001', { protocol: 'https'});
-		
-		function ipfsFileReader(fileReader,fieldId){
-	        	fileReader.onloadend = function() {
-			        const buf = buffer.Buffer(fileReader.result) // Convert data into buffer
-			        
-			        let upload = {
-			        	"path" : "attributes.json",
-			        	"content" : buf
-			        }
-			        
-			        $(".loading").show();
-			        
-			        ipfs.files.add([upload], (err, result) => { // Upload buffer to IPFS
-			          if(err) {
-			            console.error(err)
-			            return;
-			          }
-
-			          let url = `https://ipfs.io/ipfs/${result[0].hash}`
-
-			         $("#ipfsImage").val(url);
-			         $(".loading").hide();
-			        });
-			    }
-
-			    const carImage = document.getElementById(fieldId);
-	        	fileReader.readAsArrayBuffer(carImage.files[0]); // Read Provided File
-	    }
-  </script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	  <script src="/scripts/require-stub/index.js"></script>
+	  <script src="/js/buffer.js"></script>
+	  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  	  <script src="/js/common.js" type="text/javascript"></script>
 </head>
 <body>
 	<div class="container">
@@ -77,7 +24,7 @@
 		      <a class="navbar-brand" href="/">Car Story Log</a>
 		    </div>
 		    <ul class="nav navbar-nav">
-		      <li><a href="/cars">Cars</a></li>
+		      <li><a href="/cars">Vehicles</a></li>
 		      <li><a href="/services">Vehicle Services</a></li>
 		      <li><a href="/yourService">Your service</a></li>
 		    </ul>

@@ -1,18 +1,18 @@
  <% include header %>
 		<div class="jumbotron">
-		  <h1 class="display-4">Add a car service</h1>
-		  <p class="lead">If you are owner of car service you can participate in out system when you deposit 1 ether</p>
+		  <h1 class="display-4">Add a vehicle service</h1>
+		  <p class="lead">If you are an owner of vehicle service you can participate in our system when you deposit 1 ether</p>
 		  <hr class="my-4">
 		  
 		  <p>
 		  	<div class="form-group">
-			    <label for="name">Car service name : </label>
+			    <label for="name">Vehicle service name : </label>
 			    <input type="text" class="form-control" id="name" name="name" placeholder="Your Service ltd">
 			    <span class="error"></span>
 		  	</div>
 
 		  	<div class="form-group">
-			    <label>Service Image : </label>
+			    <label>Vehicle service image : </label>
 			    <input type="file" class="form-control" id="serviceImage">
 			    <input type="hidden" id="ipfsImage">
 			    <span class="errorImage"></span>
@@ -20,7 +20,7 @@
 
 		  </p>
 		  <p class="lead">
-		    <input type="button" class="btn btn-primary btn-lg" id="addService" value="Add a service!">
+		    <input type="button" class="btn btn-primary btn-lg" id="addService" value="Submit">
 		  </p>
 		</div>
 		
@@ -30,28 +30,36 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+    let contractService = web3.eth.contract(config.serviceContractABI).at(config.serviceContractAddress);
 
-	let contractAddress = '0xa9e22aff881eeb0455ba23e88b907afa72018680';
-	let contractAbi = [{"constant":!0,"inputs":[],"name":"getServicesLength","outputs":[{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"index","type":"uint256"}],"name":"getService","outputs":[{"name":"","type":"address"},{"name":"","type":"string"},{"name":"","type":"string"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!1,"inputs":[{"name":"name","type":"string"},{"name":"image","type":"string"}],"name":"addService","outputs":[],"payable":!0,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":!1,"stateMutability":"nonpayable","type":"constructor"}];
+	/* Contract events */
+	let NewAutoService = contractService.NewAutoService();
+
+	NewAutoService.watch(function(error, result){
+		if(!error){
+			toastr.success("New service is added");
+			getServices();
+		}
+	})
+
 
 	$("#serviceImage").on("change", function(){
 		const reader = new FileReader();
 		ipfsFileReader(reader, "serviceImage");
 	});
 
-    let contract = web3.eth.contract(contractAbi).at(contractAddress)
-
     function getServices(){
-    	contract.getServicesLength(function(err, result){
+    	contractService.getServicesLength(function(err, result){
     		let serviceLength = result.toNumber();
 
     		for (var i = 0; i < serviceLength; i++) {
-    			contract.getService(i,function(err,result){
+    			contractService.getService(i,function(err,result){
 		    		if(!err){
+		    			console.log(result);
 		    			$("#serviceRow").text(''); //remove previous result
-		    			let address = result[0];
-		    			let name = result[1];
-		    			let image = result[2];
+		    			let name = result[0];
+		    			let image = result[1];
+		    			let address = result[2];
 
 		    			let html = '<div class="col-sm-6 col-md-4 col-lg-3">';
 		    			html += '<div class="panel panel-default">';
@@ -75,7 +83,7 @@
     }
 
     function addService(name,image) {
-    	contract.addService(name, image, { from : web3.eth.accounts[0], value :100 },
+    	contractService.addService(name, image, { from : web3.eth.accounts[0], value : web3.toWei(1,'ether') },
     			function(err, data){
     		//if(!err){ location.reload(); }
     	});
@@ -86,7 +94,7 @@
     	let service_name = $("#name").val();
 
     	if(!service_name){
-    		$(".error").text('Please write valid service name');
+    		$(".error").text('Please write a valid service name');
     		return;
     	} 
 
@@ -98,7 +106,7 @@
     	let image = $("#ipfsImage").val();
 
     	if(!image){
-    		$(".errorImage").text('Please add image of your car');
+    		$(".errorImage").text('Please add image of your vehicle');
     	}
     	
     	addService(service_name,image);

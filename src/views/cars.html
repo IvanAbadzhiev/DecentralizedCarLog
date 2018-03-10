@@ -1,7 +1,7 @@
  <% include header %>
 		<div class="jumbotron">
-		  <h1 class="display-4">Add a car</h1>
-		  <p class="lead">You can add your car on blockchain</p>
+		  <h1 class="display-4">Add a vehicle</h1>
+		  <p class="lead">You can add your vehicle on the chain</p>
 		  <hr class="my-4">
 
 		  <p>
@@ -27,115 +27,5 @@
 			<!-- here will be added all available services -->
 		</div>
 	</div>
-	<script>
-	let carContractAddress = '0x5662528cac42cd7a8ae284705d482310c07cfbef';
-	let carContractAbi = [{"constant":!0,"inputs":[],"name":"getMyCarsCount","outputs":[{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"_vin","type":"string"}],"name":"getRepairsCount","outputs":[{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"_vin","type":"string"},{"name":"index","type":"uint256"}],"name":"getRepair","outputs":[{"name":"","type":"address"},{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"_vin","type":"string"}],"name":"getCarByVin","outputs":[{"name":"","type":"string"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!0,"inputs":[{"name":"index","type":"uint256"}],"name":"getMyCar","outputs":[{"name":"","type":"string"},{"name":"","type":"string"}],"payable":!1,"stateMutability":"view","type":"function"},{"constant":!1,"inputs":[{"name":"_vin","type":"string"},{"name":"image","type":"string"}],"name":"addCar","outputs":[],"payable":!1,"stateMutability":"nonpayable","type":"function"},{"anonymous":!1,"inputs":[{"indexed":!0,"name":"vehicleOwner","type":"address"},{"indexed":!1,"name":"vin","type":"string"}],"name":"vehicleAdded","type":"event"},{"constant":!1,"inputs":[{"name":"_vin","type":"string"},{"name":"_repair","type":"string"}],"name":"addRepair","outputs":[],"payable":!1,"stateMutability":"nonpayable","type":"function"},{"constant":!1,"inputs":[{"name":"_vin","type":"string"},{"name":"serviceAddress","type":"address"}],"name":"addServiceToCar","outputs":[],"payable":!1,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":!1,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":!1,"inputs":[{"indexed":!0,"name":"vin","type":"string"}],"name":"newCarRepair","type":"event"}];
-
-	let carContract = web3.eth.contract(carContractAbi).at(carContractAddress)
-
-	function addACar(vin, image){
-		$('.success').val('');
-
-		carContract.addCar(vin, image, function(error, result) {
-			if(!error) { 
-				$('.success').append("Success: Your car will be in the blockchain soon, you can check your transaction <a target=\"blank\" href='https://ropsten.etherscan.io/tx/" + result + "'>here</a>");
-			} else {
-				console.log(error);
-    			toastr.error("Something went wrong. See in the console for more information");
-			}
-		});
-	}
-
-	function getCars(){
-		$('#carRow').text('');
-
-		carContract.getMyCarsCount(function(error, data){
-			if(!error) {
-				let carsCount = data.toNumber();
-				
-				for (let i = 0; i < carsCount; i++) {
-				
-					carContract.getMyCar(i, function(error, result){
-						let vin = result[0];
-						let image = result[1];
-
-						let html = '<div class="col-sm-6 col-md-4 col-lg-3">';
-	    				html += '<div class="panel panel-default">';
-	    				html += '<div class="panel-heading">';
-	    				html += '<h3 class="panel-title">' + vin + '</h3>';
-	    				html += '</div>'
-
-	    				html += '<div class="panel-body">';
-	    				html += '<img style="width: 100%;" src="' + image + '">';
-	    				html += '<br/><br/>';
-	    				html += '<strong>Add service</strong>: <br/>';
-	    				html += '<strong>Address</strong>: <input type="text" class="form-control"><br/>';
-	    				html += '<button class="btn btn-default addService" type="button" data-id="' + vin + '">Add a car service</button>';
-	    				html += '</div>';
-	    				html += '</div>';
-	    				html += '</div>';
-
-	    				$('#carRow').append(html);
-					});
-				}
-			} else {
-				console.log(error);
-    			toastr.error("Something went wrong. See in the console for more information");
-			}
-		});
-	}
-
-	$("#carImage").on("change", function(){
-		const reader = new FileReader();
-      	ipfsFileReader(reader, "carImage");
-	});
-
-	$("#addAcar").on("click", function(){
-		$(".error").text('');
-
-		let vin = $("#vin").val();
-
-		if(!vin){
-    		$(".error").text('Please write valid car vin');
-    		return;
-    	} 
-
-    	if(vin.length !== 17){
-    		$(".error").text('Car vin must be 17 characters');
-    		return;
-    	}
-
-    	let image = $("#ipfsImage").val();
-
-    	if(!image){
-    		$(".errorImage").text('Please add image of your car');
-    	}
-
-    	addACar(vin,image);
-	});
-
-	$(".addService").on("click", function(){
-		//let vin = $(".addService").data("id");
-		console.log("addService");
-	});
-
-	/* Event handling */
-	eventVehicleAdded = carContract.vehicleAdded({});
-    eventNewCar = carContract.newCarRepair();
-
-    eventVehicleAdded.watch(function(error, result){
-    	if(!error){
-    		toastr.success("Your car is successfully added");
-    		eventVehicleAdded.stopWatching()
-    		getCars();
-    	} else {
-    		console.log(error);
-    		toastr.error("Something went wrong. See in the console for more information");
-    	}
-    });
-
-	$(document).ready(function() {
-		getCars();
-	});
-	</script>
+	<script src="/js/cars.js" type="text/javascript"></script> <!-- here is the logic -->
  <% include footer %>

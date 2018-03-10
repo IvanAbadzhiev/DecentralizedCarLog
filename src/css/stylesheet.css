@@ -6,6 +6,10 @@
 	color : red;
 }
 
+.errorAddress {
+  color:  red;
+}
+
 .success {
 	color: green;
 }
