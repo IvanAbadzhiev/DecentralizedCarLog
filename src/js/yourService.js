@@ -1,5 +1,6 @@
 if(!window.getCookie("signedAuthMessage")){
 	web3.eth.sign(web3.eth.coinbase, web3.sha3("CarDapp"), function(err, data){
+		console.log(err);
 		if(!err){
 			let signedAuthMessage = data;
 			document.cookie = "signedAuthMessage=" + signedAuthMessage;

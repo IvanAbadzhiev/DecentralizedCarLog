@@ -14,7 +14,7 @@ carContract.getRepairsCount(vin,function(err, repairsCount){
 			carContract.getRepair(vin, i, function(err, data){
 				let serviceAddress = data[0];
 				let reason = data[1];
-				var timestamp = data[2];
+				var timestamp = new Date(data[2] * 1000).toISOString().slice(0,10);
 				let html = '<li>' + timestamp + ' - ' + reason + ' - service address ' + serviceAddress + '</li>';
 					
 				$('.repairsList').append(html);

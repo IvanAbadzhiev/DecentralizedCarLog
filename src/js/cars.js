@@ -2,7 +2,7 @@ let carContract = web3.eth.contract(config.carContractABI).at(config.carContract
 
 	/* Event handling */
 	eventVehicleAdded = carContract.vehicleAdded({});
-    eventNewCar = carContract.newCarRepair();
+    eventNewCarRepair = carContract.newCarRepair();
 
     eventVehicleAdded.watch(function(error, result){
     	if(!error){
@@ -14,6 +14,17 @@ let carContract = web3.eth.contract(config.carContractABI).at(config.carContract
     		toastr.error("Something went wrong. Look in the console for more information");
     	}
     });
+
+    eventNewCarRepair.watch(function(error, result){
+    	console.log("* eventNewCarRepair " + result);
+    	if(!error){
+    		toastr.success("You successfully add a service to your car");
+    		eventNewCarRepair.stopWatching();
+    	} else {
+    		console.log(error);
+    		toastr.error("Something went wrong. Look in the console for more information");
+    	}
+    })
 
 	function addACar(vin, image){
 		$('.success').val('');

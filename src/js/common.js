@@ -8,6 +8,10 @@
 		if(web3.version.network != 3 && web3.version.network != null){
 			toastr.warning('Please use ropsten network to test my dapp');
 		}
+
+		if(web3.eth.coinbase == null){
+			toastr.warning('Please sign in metamask');
+		}
 	});
 
 	window.getCookie = function(name) {

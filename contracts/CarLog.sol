@@ -1,5 +1,6 @@
-
 pragma solidity ^0.4.18;
+
+import 'CarService.sol';
 
 contract CarLog  {
     
@@ -24,7 +25,7 @@ contract CarLog  {
    mapping (string => Repair[]) carToRepairs;
    
    event vehicleAdded(address indexed vehicleOwner, string vin);
-   event newCarRepair(string indexed vin);
+   event newCarRepair(string indexed vin, address serviceAddress);
    
    modifier isVinExist(string vin){
        require(carToVins[vin].isExist == false);
@@ -86,7 +87,7 @@ contract CarLog  {
        newRepair.timestamp = block.timestamp;
        
        carToRepairs[_vin].push(newRepair);
-       emit newCarRepair(_vin);
+       emit newCarRepair(_vin, msg.sender);
    }
    
    function getRepairsCount(string _vin) public view returns(uint256){
