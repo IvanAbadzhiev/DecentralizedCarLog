@@ -1,12 +1,8 @@
 # DecentralizedCarLog
 Car log system build on ethereum
 
-#Intro
-
-#Screenshots
-1.Page that you can check vin code
-![alt text](http://prntscr.com/io4kgb)
-
-
-
-#How to run
+# Install
+1. git clone
+2. npm install
+3. cd src
+4. node index.js
